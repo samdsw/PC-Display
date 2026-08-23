@@ -15,7 +15,7 @@
   margin: 0;
 }
 
-button {
+.refresh-button {
   padding: 0.55rem 0.8rem;
   background: transparent;
   border: 1px solid var(--cyan);
@@ -24,7 +24,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.refresh-button:hover {
   background: rgba(55, 216, 255, 0.12);
 }
 
