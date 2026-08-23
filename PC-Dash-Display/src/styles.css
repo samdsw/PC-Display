@@ -1,1 +1,65 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --page-background: #060914;
+  --panel-background: #0c1324;
+  --panel-border: #1d3c5c;
+
+  --text-primary: #e6f7ff;
+  --text-muted: #7f9bb5;
+
+  --cyan: #37d8ff;
+  --cyan-glow: rgba(55, 216, 255, 0.35);
+
+  --magenta: #ff4fd8;
+  --purple: #9b6cff;
+  --warning: #ffc857;
+  --danger: #ff5c7c;
+  --success: #53f6ad;
+}
+
+* {
+    box-sizing: border-box;
+    /* box-shadow: 0 0 15px var(--cyan-glow); */
+}
+
+.dashboard-grid > * {
+  display: block;
+  min-width: 0;
+}
+
+.dashboard-grid > * > .dashboard-panel {
+  height: 100%;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100dvh;
+    background: var(--page-background);
+    color: var(--text-primary);
+    font-family: Arial, sans-serif;
+}
+
+.dashboard-panel {
+    min-height: 220px;
+    padding: 1.5rem;
+    background: var(--panel-background);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    box-shadow: 0 0 15px var(--cyan-glow);
+    /* border: none; */
+}
+
+.dashboard-panel h2 {
+    margin-top: 0;
+    color: var(--text-primary);
+    font-size: clamp(1rem, 1.5vw, 1.4rem);
+}
+
+.dashboard-panel p {
+    color: var(--text-muted);
+}
+
+.metric-value {
+    font-size: clamp(2rem, 5vw, 4.5rem);
+}

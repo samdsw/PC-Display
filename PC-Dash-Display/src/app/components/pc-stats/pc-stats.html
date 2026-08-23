@@ -1,12 +1,17 @@
-<div>
-    <h2>System Overview</h2>
-    <button (click)="refreshMetrics()">Refresh metrics</button>
+<section class="dashboard-panel">
+    <div class="panel-header">
+        <h2>PC Stats</h2>
+        <button (click)="refreshMetrics()">Refresh metrics</button>
+    </div>
+
+
+    <div class="metrics-grid">
     @for (metric of metrics; track metric.name) {
-        <div class="metric-card">
-            <h3>{{ metric.name }}</h3>
-            <p>Usage: {{ metric.usage }}%</p>
-            <p>Temp: {{ metric.detail }}</p>
-        </div>
-    <!-- one metric-card layout -->
+        <article class="metric-card">
+        <h3>{{ metric.name }}</h3>
+        <p class="metric-usage">Usage: {{ metric.usage }}%</p>
+        <p class="metric-detail">Detail: {{ metric.detail }}</p>
+        </article>
     }
 </div>
+</section>

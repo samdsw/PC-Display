@@ -1,0 +1,39 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-areas:
+    "pc-stats pc-stats"
+    "spotify game-stats"
+    "spotify discord";
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: clamp(0.75rem, 2vw, 2rem);
+}
+
+.pc-stats {
+  grid-area: pc-stats;
+}
+
+.spotify {
+  grid-area: spotify;
+}
+
+.game-stats {
+  grid-area: game-stats;
+}
+
+.discord {
+  grid-area: discord;
+}
+
+@media (max-width: 800px) {
+  .dashboard-grid {
+    grid-template-areas:
+      "pc-stats"
+      "spotify"
+      "game-stats"
+      "discord";
+    grid-template-columns: 1fr;
+  }
+}

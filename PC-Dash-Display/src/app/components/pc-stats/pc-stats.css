@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.panel-header h2 {
+  margin: 0;
+}
+
+button {
+  padding: 0.55rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--cyan);
+  border-radius: 6px;
+  color: var(--cyan);
+  cursor: pointer;
+}
+
+button:hover {
+  background: rgba(55, 216, 255, 0.12);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  padding: 1rem;
+  background: rgba(55, 216, 255, 0.04);
+  border-left: 2px solid var(--cyan);
+}
+
+.metric-card h3,
+.metric-card p {
+  margin: 0;
+}
+
+.metric-card h3 {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+
+.metric-usage {
+  margin-top: 0.5rem !important;
+  color: var(--text-primary) !important;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+}
+
+.metric-detail {
+  margin-top: 0.25rem !important;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 550px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
