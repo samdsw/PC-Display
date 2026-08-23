@@ -1,27 +1,15 @@
 import { Component } from '@angular/core';
+import { PcStats } from '../components/pc-stats/pc-stats';
+import { GameStats } from '../components/game-stats/game-stats';
+import { Spotify } from '../components/spotify/spotify';
+import { Discord  } from '../components/discord/discord';
 
-interface SystemMetric {
-  name: string;
-  usage: number;
-  detail: string;
-}
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [PcStats, GameStats, Spotify, Discord],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 
-export class HomeComponent {
-  metrics: SystemMetric[] = [
-    { name: 'CPU', usage: 45, detail: '65°C' },
-    { name: 'GPU', usage: 70, detail: '75°C' },
-    { name: 'RAM', usage: 60, detail: '8GB / 32GB' },
-  ];  
-
-  refreshMetrics() {
-    // Logic to refresh system metrics goes here
-    
-  }
-}
+export class HomeComponent {}

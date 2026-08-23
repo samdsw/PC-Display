@@ -1,1 +1,12 @@
-<p>pc-stats works!</p>
+<div>
+    <h2>System Overview</h2>
+    <button (click)="refreshMetrics()">Refresh metrics</button>
+    @for (metric of metrics; track metric.name) {
+        <div class="metric-card">
+            <h3>{{ metric.name }}</h3>
+            <p>Usage: {{ metric.usage }}%</p>
+            <p>Temp: {{ metric.detail }}</p>
+        </div>
+    <!-- one metric-card layout -->
+    }
+</div>
