@@ -86,6 +86,71 @@ app.MapGet("/api/sensors", () =>
     return Results.Ok(sensors);
 });
 
+// Creates the smaller endpoint that the Angular dashboard will use. Unlike
+// /api/sensors, this deliberately returns only the readings we selected for
+// this computer instead of exposing every available raw sensor.
+app.MapGet("/api/system", () =>
+{
+    // Refresh readings again because every HTTP request should receive a
+    // current snapshot of the machine, rather than old cached values.
+    computer.Accept(new UpdateVisitor());
+
+    // CPU temperature is intentionally not included yet. The detected
+    // "Core (Tctl/Tdie)" sensor currently returns 0, so displaying it would
+    // be misleading. We will investigate it after the dashboard is connected.
+    var systemMetrics = new
+    {
+        cpu = new
+        {
+            usage = RoundSensorValue(GetSensorValue(
+                computer,
+                HardwareType.Cpu,
+                "CPU Total",
+                SensorType.Load))
+        },
+        ram = new
+        {
+            // "Total Memory" describes physical RAM. "Virtual Memory" also
+            // includes page-file-related values, so it is not used here.
+            usage = RoundSensorValue(GetSensorValue(
+                computer,
+                HardwareType.Memory,
+                "Memory",
+                SensorType.Load,
+                "Total Memory")),
+            usedGb = RoundSensorValue(GetSensorValue(
+                computer,
+                HardwareType.Memory,
+                "Memory Used",
+                SensorType.Data,
+                "Total Memory"))
+        },
+        gpu = new
+        {
+            // HardwareType.GpuNvidia selects the discrete RTX card, not the
+            // AMD integrated graphics hardware also present in this PC.
+            name = GetHardwareName(computer, HardwareType.GpuNvidia),
+            usage = RoundSensorValue(GetSensorValue(
+                computer,
+                HardwareType.GpuNvidia,
+                "GPU Core",
+                SensorType.Load)),
+            temperature = RoundSensorValue(GetSensorValue(
+                computer,
+                HardwareType.GpuNvidia,
+                "GPU Core",
+                SensorType.Temperature)),
+            memoryUsage = RoundSensorValue(GetSensorValue(
+                computer,
+                HardwareType.GpuNvidia,
+                "GPU Memory",
+                SensorType.Load))
+        }
+    };
+
+    return Results.Ok(systemMetrics);
+});
+
 // Starts the local server. Using a fixed port makes the future Angular and
 // WebSocket connection addresses predictable during development.
 app.Run("http://localhost:5000");
@@ -104,6 +169,41 @@ static IEnumerable<IHardware> GetAllHardware(IEnumerable<IHardware> hardwareItem
             yield return subHardware;
         }
     }
+}
+
+// Finds one sensor value by its hardware type, sensor name, and sensor type.
+// An optional hardwareName lets us distinguish items such as Total Memory
+// from Virtual Memory, which otherwise expose similarly named sensors.
+static float? GetSensorValue(
+    Computer computer,
+    HardwareType hardwareType,
+    string sensorName,
+    SensorType sensorType,
+    string? hardwareName = null)
+{
+    return GetAllHardware(computer.Hardware)
+        .Where(hardware => hardware.HardwareType == hardwareType)
+        .Where(hardware => hardwareName is null || hardware.Name == hardwareName)
+        .SelectMany(hardware => hardware.Sensors)
+        .FirstOrDefault(sensor =>
+            sensor.Name == sensorName && sensor.SensorType == sensorType)
+        ?.Value;
+}
+
+// Returns the detected display name of the selected hardware, such as the
+// installed NVIDIA GPU model. This avoids hard-coding the model name.
+static string? GetHardwareName(Computer computer, HardwareType hardwareType)
+{
+    return GetAllHardware(computer.Hardware)
+        .FirstOrDefault(hardware => hardware.HardwareType == hardwareType)
+        ?.Name;
+}
+
+// Hardware values often have many decimal places. Two decimals are precise
+// enough for the dashboard and keep the JSON and UI easy to read.
+static float? RoundSensorValue(float? value)
+{
+    return value is float sensorValue ? MathF.Round(sensorValue, 2) : null;
 }
 
 // LibreHardwareMonitor uses the visitor pattern to walk through the computer.
