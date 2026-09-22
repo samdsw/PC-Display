@@ -6,7 +6,7 @@
 
 
     <div class="metrics-grid">
-    @for (metric of metrics; track metric.name) {
+    @for (metric of metrics(); track metric.name) {
         <article class="metric-card">
         <h3>{{ metric.name }}</h3>
         <p class="metric-usage">Usage: {{ metric.usage }}%</p>
