@@ -24,7 +24,18 @@ export class PcStats implements OnInit, OnDestroy {
 
   private refreshTimerId?: ReturnType<typeof setInterval>;
 
-  ngOnInit() {
+  refreshMetrics() {
+    this.systemMetricsService.getSystemMetrics().subscribe((response) => {
+      const updatedMetrics: SystemMetric[] = [
+        { name: 'CPU', usage: response.cpu.usage ?? 0, detail: `` },
+        { name: 'GPU', usage: response.gpu.usage ?? 0, detail: `${response.gpu.temperature ?? 0}°C` },
+        { name: 'RAM', usage: response.ram.usage ?? 0, detail: `${response.ram.usedGb ?? 0}GB` },
+      ];
+      this.metrics.set(updatedMetrics);
+    });
+  }
+
+    ngOnInit() {
     this.refreshMetrics();
 
     this.refreshTimerId = setInterval(() => {
@@ -36,16 +47,5 @@ export class PcStats implements OnInit, OnDestroy {
     if (this.refreshTimerId) {
       clearInterval(this.refreshTimerId);
     }
-  }
-
-  refreshMetrics() {
-    this.systemMetricsService.getSystemMetrics().subscribe((response) => {
-      const updatedMetrics: SystemMetric[] = [
-        { name: 'CPU', usage: response.cpu.usage ?? 0, detail: `` },
-        { name: 'GPU', usage: response.gpu.usage ?? 0, detail: `${response.gpu.temperature ?? 0}°C` },
-        { name: 'RAM', usage: response.ram.usage ?? 0, detail: `${response.ram.usedGb ?? 0}GB` },
-      ];
-      this.metrics.set(updatedMetrics);
-    });
   }
 }
