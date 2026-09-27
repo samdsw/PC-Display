@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { SystemMetricsService } from '../../services/system-metrics';
 
 interface SystemMetric {
@@ -14,7 +14,7 @@ interface SystemMetric {
   styleUrl: './pc-stats.css',
 })
 
-export class PcStats implements OnInit {
+export class PcStats implements OnInit, OnDestroy {
   // Create one persistent signal that stores the current three metric cards.
   // Calling metrics() reads this signal in the template; it must not create a
   // new signal every time it is called.
@@ -22,8 +22,20 @@ export class PcStats implements OnInit {
 
   private readonly systemMetricsService = inject(SystemMetricsService);
 
+  private refreshTimerId?: ReturnType<typeof setInterval>;
+
   ngOnInit() {
     this.refreshMetrics();
+
+    this.refreshTimerId = setInterval(() => {
+      this.refreshMetrics();
+    }, 3000);
+  }
+
+  ngOnDestroy() {
+    if (this.refreshTimerId) {
+      clearInterval(this.refreshTimerId);
+    }
   }
 
   refreshMetrics() {
