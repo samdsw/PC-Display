@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { SpotifyAuthService } from '../../services/spotify-auth';
 
 @Component({
   selector: 'app-spotify',
@@ -6,4 +7,10 @@ import { Component } from '@angular/core';
   templateUrl: './spotify.html',
   styleUrl: './spotify.css',
 })
-export class Spotify {}
+export class Spotify {
+    private readonly spotifyAuthService = inject(SpotifyAuthService);
+
+    startSpotifyLogin() {
+        this.spotifyAuthService.startLogin();
+    }
+}
